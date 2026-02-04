@@ -1,4 +1,7 @@
 const users = require('../model/users')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt');
+
 
 module.exports = {
     //POST /auth/register
@@ -18,7 +21,7 @@ module.exports = {
 
         //caso passe das validações, crio e retorno um json contendo o usuario criado
         const newUser = users.createUser(name, email, password)
-        return res.status(201).json(newUser)
+        return res.status(201).json({...newUser, password: undefined})
 
     },
 
@@ -36,6 +39,15 @@ module.exports = {
         if(!existUser){
             return res.status(400).json({ message: 'Usuario não cadastrado'})
         }
-        return res.status(200).json(existUser)
+
+        //faço uma validação para saber se a senha é valida
+        const isValidPassword = bcrypt.compareSync(password, existUser.password)
+        if(!isValidPassword){
+            return res.status(400).json({ message: 'Usuário ou Senha Inválido'})
+        }
+        
+        const payload = { id: existUser.id, email: existUser.email}
+        const token = jwt.sign( payload, process.env.JWT_KEY, {expiresIn:'1d'})
+        res.json(token)
     }
 }
