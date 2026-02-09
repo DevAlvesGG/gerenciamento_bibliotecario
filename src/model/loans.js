@@ -53,7 +53,7 @@ module.exports = {
         loan.isLate = today > limitDate
         loan.returnDate = today
 
-        books.devolutiveLoan(loan.book.id)
+        books.devolutiveLoan(loan.bookId)
         return loan
 
     }
