@@ -52,5 +52,19 @@ module.exports = {
         if(bookIndex === -1) throw new HttpError(404, 'Livro não encontrado')
         const bookDeleted = books.filter((book) => book.id !== id)//filtro pelos livros que são diferente do que vai ser deletado
         return bookDeleted
+    },
+
+    takeBooktoLoan: (id) => {
+        const bookIndex = books.findIndex((book) => book.id === id)
+        if(bookIndex === -1) throw new HttpError(404, 'Livro não encontrado')
+
+        books[bookIndex].quantity -= 1
+    },
+
+    devolutiveLoan: (id) => {
+        const bookIndex = books.findIndex((book) => book.id === id)
+        if(bookIndex === -1) throw new HttpError(404, 'Livro não encontrado')
+
+        books[bookIndex].quantity += 1
     }
 }
