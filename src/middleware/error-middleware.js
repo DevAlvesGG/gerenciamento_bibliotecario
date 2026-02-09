@@ -1,3 +1,5 @@
+const HttpError = require('../errors/HttpError')
+
 module.exports = (error,req, res, next) => {
     if(error){
         if(error instanceof HttpError) {
